@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta charset="UTF-8" />
+    <title>Remote Turtles</title>
+    <link rel="stylesheet" href="./src/index.css">
+  </head>
+  <body>
+    <div class="controls" id="controls">
+      <input type="number" id="turtleId" placeholder="id" value="3">
+      <input type="text" id="command" placeholder="command" value="print('womp')">
+      <button id="sendBtn">Send Command</button>
+      <div class="movement">
+        <div class="row">
+          <button id="sendUp">↑</button>
+          <button id="sendForward">w</button>
+          <button id="sendDown">↓</button>
+        </div>
+        <div class="row">
+          <button id="sendLeft">a</button>
+          <button id="sendBack">s</button>
+          <button id="sendRight">d</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/renderer.ts"></script>
+  </body>
+</html>
