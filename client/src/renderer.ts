@@ -3,8 +3,6 @@ import { ipcRenderer } from "electron";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-let direction: number = 0;
-
 // Lock input
 function lockUI(isLocked: boolean) {
   const interactiveElements = document.querySelectorAll('button, input');
@@ -24,6 +22,18 @@ window.electronAPI.onUILocked((isLocked) => {
   lockUI(isLocked);
 });
 
+// Update position and direction
+let direction: number = 0;
+let position: any = null;
+window.electronAPI.onMove((pos) => {
+  position = pos;
+  controls.target.set(position.x, position.y, position.z);
+});
+window.electronAPI.onTurn((d) => {
+  direction = d;
+});
+
+
 // Handle input
 const idInput = document.getElementById("turtleId") as HTMLInputElement;
 const cmdInput = document.getElementById("command") as HTMLInputElement;
@@ -38,28 +48,18 @@ const sendBtn     = document.getElementById("sendBtn");
 sendForward?.addEventListener("click", () => { 
   lockUI(true);
   window.electronAPI.onSendCommand(parseInt(idInput.value), "move", "forward");
-  if(direction == 0) controls.target.set(controls.target.x, controls.target.y, controls.target.z+1);
-  if(direction == 1) controls.target.set(controls.target.x+1, controls.target.y, controls.target.z);
-  if(direction == 2) controls.target.set(controls.target.x, controls.target.y, controls.target.z-1);
-  if(direction == 3) controls.target.set(controls.target.x-1, controls.target.y, controls.target.z);
 });
 sendBack?.addEventListener("click", () => {
   lockUI(true);
   window.electronAPI.onSendCommand(parseInt(idInput.value), "move", "back");
-  if(direction == 0) controls.target.set(controls.target.x, controls.target.y, controls.target.z-1);
-  if(direction == 1) controls.target.set(controls.target.x-1, controls.target.y, controls.target.z);
-  if(direction == 2) controls.target.set(controls.target.x, controls.target.y, controls.target.z+1);
-  if(direction == 3) controls.target.set(controls.target.x+1, controls.target.y, controls.target.z);
 });
 sendUp?.addEventListener("click", () => { 
   lockUI(true);
   window.electronAPI.onSendCommand(parseInt(idInput.value), "move", "up");
-  controls.target.set(controls.target.x, controls.target.y+1, controls.target.z);
 });
 sendDown?.addEventListener("click", () => {
   lockUI(true);
   window.electronAPI.onSendCommand(parseInt(idInput.value), "move", "down");
-  controls.target.set(controls.target.x, controls.target.y-1, controls.target.z);
 });
 sendLeft?.addEventListener("click", () => {
   lockUI(true);
@@ -84,6 +84,15 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 const controls = new OrbitControls(camera, renderer.domElement);
 
+controls.mouseButtons = {
+  LEFT: THREE.MOUSE.PAN,
+  MIDDLE: THREE.MOUSE.DOLLY, 
+  RIGHT: THREE.MOUSE.ROTATE
+};
+controls.enablePan = false;
+controls.target.set(0, 0, 0);
+camera.position.z = -5;
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 window.addEventListener("resize", () => {
@@ -92,24 +101,40 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Add a simple object
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+const blockMeshes = new Map();
+function spawnBlock(x, y, z, name, colorID) {  
+  if(blockMeshes.has(`${x},${y},${z}`)) {
+    if(name === "minecraft:air") {
+      scene.remove(blockMeshes.get(`${x},${y},${z}`));
+      blockMeshes.delete(`${x},${y},${z}`)
+    }
+    else return;
+  }
+  if(name === "minecraft:air") { return; }
+  console.log(x + "(x)" + y + "(y)" + z + "(z)" + name)
 
-controls.mouseButtons = {
-  LEFT: THREE.MOUSE.PAN,
-  MIDDLE: THREE.MOUSE.DOLLY, 
-  RIGHT: THREE.MOUSE.ROTATE
-};
-controls.enablePan = false;
-controls.target.set(0, 0, 0);
-camera.position.z = 5;
+  //const material = new THREE.MeshLambertMaterial(); //{ color: "#" + color.toString(16) }
+  const material = new THREE.MeshNormalMaterial();
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.position.set(x, y, z);
+  scene.add(mesh);
+  blockMeshes.set(`${x},${y},${z}`, mesh);
+}
+
+window.electronAPI.onInitialLoad((worldData) => {
+  for(const [coords, info] of Object.entries(worldData)) {
+    const [x, y, z] = coords.split(',').map(Number);
+    spawnBlock(x, y, z, info.name, info.color);
+  }
+});
 
 window.electronAPI.onWorldData((data) => {
-  console.log(data.response);
-  // Update 3D objects here
+  console.log(data)
+  for(const [coords, info] of Object.entries(data)) {
+    const [x, y, z] = coords.split(',').map(Number);
+    spawnBlock(x, y, z, info.name, info.color);
+  }
 });
 
 function animate() {
