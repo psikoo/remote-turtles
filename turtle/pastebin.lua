@@ -59,12 +59,12 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
+              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "forward" }))
               ws.send(textutils.serializeJSON({
                 type = "world",
                 status = true,
                 response = dataTable
               }))
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "forward" }))
             end
           elseif data.content == "back" then
             if turtle.back() then
@@ -84,12 +84,12 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
+              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "back" }))
               ws.send(textutils.serializeJSON({
                 type = "world",
                 status = true,
                 response = dataTable
               }))
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "back" }))
             end
           elseif data.content == "up" then
             if turtle.up() then
@@ -109,12 +109,12 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
+              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "up" }))
               ws.send(textutils.serializeJSON({
                 type = "world",
                 status = true,
                 response = dataTable
               }))
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "up" }))
             end
           elseif data.content == "down" then
             if turtle.down() then
@@ -134,12 +134,12 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
+              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "down" }))
               ws.send(textutils.serializeJSON({
                 type = "world",
                 status = true,
                 response = dataTable
               }))
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "down" }))
             end
           end
           ws.send(textutils.serializeJSON({ type = "response", status = true, response = "ready" }))
