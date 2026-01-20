@@ -37,6 +37,58 @@ while true do
           else
             ws.send(textutils.serializeJSON({ type = "response", status = false, response = "Error: "..tostring(catch) }))
           end
+        elseif data.type == "move" and data.content then
+          if data.content == "forward" then
+            if turtle.forward() then
+              local hasBlockF, dataF = turtle.inspect()
+              local hasBlockU, dataU = turtle.inspectUp()
+              local hasBlockD, dataD = turtle.inspectDown()
+              turtle.turnLeft()
+              local hasBlockL, dataL = turtle.inspect()
+              turtle.turnRight()
+              turtle.turnRight()
+              local hasBlockR, dataR = turtle.inspect() 
+              turtle.turnLeft()
+              local dataTable = {
+                blockF = dataF.name,
+                blockU = dataU.name,
+                blockD = dataD.name,
+                blockL = dataL.name,
+                blockR = dataR.name
+              }
+              ws.send(textutils.serializeJSON({ 
+                type = "world", 
+                status = true, 
+                response = JSONEncode(dataTable)
+              }))
+            end
+          elseif data.content == "back" then
+            if turtle.back() then
+              local hasBlockU, dataU = turtle.inspectUp()
+              local hasBlockD, dataD = turtle.inspectDown()
+              turtle.turnLeft()
+              local hasBlockL, dataL = turtle.inspect()
+              turtle.turnLeft()
+              local hasBlockB, dataB = turtle.inspect()
+              turtle.turnRight()
+              turtle.turnRight()
+              turtle.turnRight()
+              local hasBlockR, dataR = turtle.inspect() 
+              turtle.turnLeft()
+              local dataTable = {
+                blockF = dataB.name,
+                blockU = dataU.name,
+                blockD = dataD.name,
+                blockL = dataL.name,
+                blockR = dataR.name
+              }
+              ws.send(textutils.serializeJSON({ 
+                type = "world", 
+                status = true, 
+                response = JSONEncode(dataTable)
+              }))
+            end
+          end
         end
       elseif event == "websocket_closed" then
         break
