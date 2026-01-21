@@ -8,7 +8,7 @@ const { JsonDB, Config } = require("node-json-db");
 let mainWindow: any
 if (started) { app.quit(); }
 
-const createWindow = () => {
+function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000, height: 700,
     webPreferences: { preload: path.join(__dirname, "preload.js") },
@@ -21,7 +21,13 @@ const createWindow = () => {
   Menu.setApplicationMenu(null);
   mainWindow.webContents.openDevTools();
 };
-app.on("ready", createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  mainWindow.webContents.on('did-finish-load', () => {
+    console.log('Ready!');
+    sendFullWorld()
+  });
+});
 app.on("window-all-closed", () => { app.quit(); });
 app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) { createWindow(); } });
 
@@ -46,12 +52,14 @@ async function sendFullWorld() {
 ipcMain.on("send-command", (event, { id, type, content }) => {
   const targetWs = turtles.get(id);
   if(targetWs) targetWs.send(JSON.stringify({ type: type, content: content }));
-  else console.error(`[ERROR] Turtle ${id} not found`);
+  else {
+    console.error(`[ERROR] Turtle ${id} not found`);
+    mainWindow.webContents.send("ui-locked", false);
+  }
 });
 
 wss.on("connection", async (ws: any) => {
   let turtleId: number = null;
-  sendFullWorld();
   ws.on("message", async (msg: string) => {
     const data = JSON.parse(msg.toString());
     if(data.type === "handshake") {
@@ -63,10 +71,7 @@ wss.on("connection", async (ws: any) => {
         await saveTurtle(turtleId, 0, 0, 0, 0);
       }
     }
-    if (!turtleId) {
-      mainWindow.webContents.send("ui-locked", false); // TODO this doesnt work, when no turtle is connnected and ui is cliked ui locks
-      return;
-    }
+    if (!turtleId) return;
     const currentQueue = messageQueues.get(turtleId) || Promise.resolve();
     const nextInQueue = currentQueue.then(async () => {
       try { await handleTurtleMessage(data, turtleId, ws); } 

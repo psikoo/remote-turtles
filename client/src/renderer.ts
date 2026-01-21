@@ -91,7 +91,8 @@ controls.mouseButtons = {
 };
 controls.enablePan = false;
 controls.target.set(0, 0, 0);
-camera.position.z = -5;
+camera.position.y = 5;
+camera.position.z = 5;
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -103,7 +104,7 @@ window.addEventListener("resize", () => {
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const blockMeshes = new Map();
-function spawnBlock(x, y, z, name, colorID) {  
+function spawnBlock(x, y, z, name, colorD) {  
   if(blockMeshes.has(`${x},${y},${z}`)) {
     if(name === "minecraft:air") {
       scene.remove(blockMeshes.get(`${x},${y},${z}`));
@@ -114,8 +115,7 @@ function spawnBlock(x, y, z, name, colorID) {
   if(name === "minecraft:air") { return; }
   console.log(x + "(x)" + y + "(y)" + z + "(z)" + name)
 
-  //const material = new THREE.MeshLambertMaterial(); //{ color: "#" + color.toString(16) }
-  const material = new THREE.MeshNormalMaterial();
+  const material = new THREE.MeshBasicMaterial({ color: colorD });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, y, z);
   scene.add(mesh);
