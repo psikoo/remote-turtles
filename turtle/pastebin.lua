@@ -16,13 +16,18 @@ local function log(str, color)
   term.setTextColor(colors.white)
 end
 
+local function send(ws, typeIn, statusIn, responseIn)
+  log("SEND: "..typeIn, colors.purple)
+  ws.send(textutils.serializeJSON({ type = typeIn, status = statusIn, response = responseIn }))
+end
+
 while true do
   local ws, err = http.websocket(wsUrl)
   if not ws then
     log("ERROR: "..err, colors.red)
   else
     log("CONNECTION: "..wsUrl, colors.green)
-    ws.send(textutils.serializeJSON({ type = "handshake", id = os.getComputerID() }))
+    send(ws, "handshake", true, os.getComputerID())
     while true do
       local event, url, message = os.pullEvent()
       if event == "websocket_message" then
@@ -34,11 +39,11 @@ while true do
           local func, catch = load("return "..data.content)
           if func then
             local success, result = pcall(func)
-            ws.send(textutils.serializeJSON({ type = "response", status = success, response = tostring(result) })) 
+            send(ws, "response", success, tostring(result))
           else
-            ws.send(textutils.serializeJSON({ type = "response", status = false, response = "Error: "..tostring(catch) }))
+            send(ws, "response", false, "Error: "..tostring(catch))
           end
-          ws.send(textutils.serializeJSON({ type = "response", status = true, response = "ready" }))
+          send(ws, "response", true, "ready")
 
         elseif data.type == "move" and data.content then
           if data.content == "forward" then
@@ -59,12 +64,8 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "forward" }))
-              ws.send(textutils.serializeJSON({
-                type = "world",
-                status = true,
-                response = dataTable
-              }))
+              send(ws, "move", true, "forward")
+              send(ws, "world", true, dataTable)
             end
           elseif data.content == "back" then
             if turtle.back() then
@@ -84,12 +85,8 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "back" }))
-              ws.send(textutils.serializeJSON({
-                type = "world",
-                status = true,
-                response = dataTable
-              }))
+              send(ws, "move", true, "back")
+              send(ws, "world", true, dataTable)
             end
           elseif data.content == "up" then
             if turtle.up() then
@@ -109,12 +106,8 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "up" }))
-              ws.send(textutils.serializeJSON({
-                type = "world",
-                status = true,
-                response = dataTable
-              }))
+              send(ws, "move", true, "up")
+              send(ws, "world", true, dataTable)
             end
           elseif data.content == "down" then
             if turtle.down() then
@@ -134,24 +127,20 @@ while true do
                 blockL = { name = dataL.name or "minecraft:air", color = dataL.mapColor or 0 },
                 blockR = { name = dataR.name or "minecraft:air", color = dataR.mapColor or 0 }
               }
-              ws.send(textutils.serializeJSON({ type = "move", status = true, response = "down" }))
-              ws.send(textutils.serializeJSON({
-                type = "world",
-                status = true,
-                response = dataTable
-              }))
+              send(ws, "move", true, "down")
+              send(ws, "world", true, dataTable)
             end
           end
-          ws.send(textutils.serializeJSON({ type = "response", status = true, response = "ready" }))
+          send(ws, "response", true, "ready")
         elseif data.type == "turn" and data.content then
           if data.content == "left" then
             turtle.turnLeft()
-            ws.send(textutils.serializeJSON({ type = "turn", status = true, response = "left" }))
+            send(ws, "turn", true, "left")
           elseif data.content == "right" then
             turtle.turnRight()
-            ws.send(textutils.serializeJSON({ type = "turn", status = true, response = "right" }))
+            send(ws, "turn", true, "right")
           end
-          ws.send(textutils.serializeJSON({ type = "response", status = true, response = "ready" }))
+          send(ws, "response", true, "ready")
         end
       elseif event == "websocket_closed" then
         break

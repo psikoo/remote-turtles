@@ -5,3 +5,14 @@ body {
 .controls{
   position: absolute;
 }
+
+.tooltip {
+  position: absolute;
+  right: 0px;
+  display: none; 
+  background: red; 
+  color: white; 
+  padding: 5px; 
+  border-radius: 4px; 
+  pointer-events: none;
+}

@@ -1,0 +1,38 @@
+import { app, BrowserWindow, Menu } from "electron";
+import started from "electron-squirrel-startup";
+import path from "node:path";
+import { DatabaseManager } from "./databaseManager";
+
+let mainWindow: any
+
+export const electronManager = {
+  getMainWindow: () => mainWindow,
+
+  init(openDevTools: boolean) {
+    if (started) { app.quit(); }
+
+    app.whenReady().then(() => {
+      createWindow();
+      mainWindow.webContents.on('did-finish-load', async () => { 
+        mainWindow.webContents.send("initial-world-load", await DatabaseManager.getFullWorld());
+      });
+      if(openDevTools) mainWindow.webContents.openDevTools();
+    });
+    
+    app.on("window-all-closed", () => { app.quit(); });
+    app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) { createWindow(); } });
+  },
+}
+
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1000, height: 700,
+    webPreferences: { preload: path.join(__dirname, "preload.js") },
+  });
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  } else {
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+  }
+  Menu.setApplicationMenu(null);
+}
