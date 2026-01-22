@@ -2,7 +2,7 @@ const { WebSocketServer } = require("ws");
 
 import { DatabaseManager, electronManager, TurtleManager } from "./managers/main";
 
-electronManager.init(true);
+electronManager.init(false);
 DatabaseManager.init();
 TurtleManager.init();
 

@@ -21,6 +21,45 @@ local function send(ws, typeIn, statusIn, responseIn)
   ws.send(textutils.serializeJSON({ type = typeIn, status = statusIn, response = responseIn }))
 end
 
+local function doEval(data)
+  log("> "..data.content, colors.purple)
+  local func, catch = load("return "..data.content)
+  if func then
+    local success, result = pcall(func)
+    send(ws, "response", success, tostring(result))
+  else
+    send(ws, "response", false, "Error: "..tostring(catch))
+  end
+end
+
+local function doFuel()
+  
+end
+
+local function doPlace()
+  
+end
+
+local function doMine()
+  
+end
+
+local function doMove()
+  
+end
+
+local function doTurn()
+  
+end
+
+local function doSlot()
+  
+end
+
+local function doInventory()
+  
+end
+
 while true do
   local ws, err = http.websocket(wsUrl)
   if not ws then
@@ -30,7 +69,25 @@ while true do
     local dataTable = {
       id = os.getComputerID(),
       fuel = turtle.getFuelLevel().."/"..turtle.getFuelLimit(),
-      slot = turtle.getSelectedSlot()
+      slot = turtle.getSelectedSlot(),
+      inventory = {
+        s1 = { item = turtle.getItemDetail(1).name, count = turtle.getItemDetail(1).count },
+        s2 = { item = turtle.getItemDetail(2).name, count = turtle.getItemDetail(2).count },
+        s3 = { item = turtle.getItemDetail(3).name, count = turtle.getItemDetail(3).count },
+        s4 = { item = turtle.getItemDetail(4).name, count = turtle.getItemDetail(4).count },
+        s5 = { item = turtle.getItemDetail(5).name, count = turtle.getItemDetail(5).count },
+        s6 = { item = turtle.getItemDetail(6).name, count = turtle.getItemDetail(6).count },
+        s7 = { item = turtle.getItemDetail(7).name, count = turtle.getItemDetail(7).count },
+        s8 = { item = turtle.getItemDetail(8).name, count = turtle.getItemDetail(8).count },
+        s9 = { item = turtle.getItemDetail(9).name, count = turtle.getItemDetail(9).count },
+        s10 = { item = turtle.getItemDetail(10).name, count = turtle.getItemDetail(10).count },
+        s11 = { item = turtle.getItemDetail(11).name, count = turtle.getItemDetail(11).count },
+        s12 = { item = turtle.getItemDetail(12).name, count = turtle.getItemDetail(12).count },
+        s13 = { item = turtle.getItemDetail(13).name, count = turtle.getItemDetail(13).count },
+        s14 = { item = turtle.getItemDetail(14).name, count = turtle.getItemDetail(14).count },
+        s15 = { item = turtle.getItemDetail(15).name, count = turtle.getItemDetail(15).count },
+        s16 = { item = turtle.getItemDetail(16).name, count = turtle.getItemDetail(16).count }
+      }
     }
     send(ws, "handshake", true, dataTable)
     while true do
@@ -40,14 +97,7 @@ while true do
         log("WS: ("..data.type..") "..data.content, colors.purple)
 
         if data.type == "eval" and data.content then
-          log("> "..data.content, colors.purple)
-          local func, catch = load("return "..data.content)
-          if func then
-            local success, result = pcall(func)
-            send(ws, "response", success, tostring(result))
-          else
-            send(ws, "response", false, "Error: "..tostring(catch))
-          end
+          doEval()
         elseif data.type == "fuel" and data.content then
           if data.content == "refuel" then
             turtle.refuel()
