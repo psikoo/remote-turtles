@@ -13,7 +13,7 @@ export const electronManager = {
 
     app.whenReady().then(() => {
       createWindow();
-      mainWindow.webContents.on('did-finish-load', async () => { 
+      mainWindow.webContents.on("did-finish-load", async () => { 
         const worldData = await DatabaseManager.getFullWorld();
         if(worldData) mainWindow.webContents.send("initial-world-load", worldData);
       });

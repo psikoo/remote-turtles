@@ -7,35 +7,65 @@
     <link rel="stylesheet" href="./src/index.css">
   </head>
   <body>
+    <div class="inventory">
+      <div class="inventoryRow">
+        <button id="inv1">1</button>
+        <button id="inv2">2</button>
+        <button id="inv3">3</button>
+        <button id="inv4">4</button>
+      </div>
+      <div class="inventoryRow">
+        <button id="inv5">5</button>
+        <button id="inv6">6</button>
+        <button id="inv7">7</button>
+        <button id="inv8">8</button>
+      </div>
+      <div class="inventoryRow">
+        <button id="inv9">9</button>
+        <button id="inv10">10</button>
+        <button id="inv11">11</button>
+        <button id="inv12">12</button>
+      </div>
+      <div class="inventoryRow">
+        <button id="inv13">13</button>
+        <button id="inv14">14</button>
+        <button id="inv15">15</button>
+        <button id="inv16">16</button>
+      </div>
+      <button id="drop">Drop</button>
+      <button id="suck">Suck</button>
+      <button id="fuel">Fuel: 0/0</button>
+      <button id="refuel">Refuel</button>
+    </div>
     <div class="controlsTop" id="controlsTop">
       <div class="place">
-        <button id="placeUp">↑</button>
-        <button id="placeForward">p</button>
-        <button id="placeDown">↓</button>
+        <button id="placeUp" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M32,120l96-96,96,96H176v88a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V120Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+        <button id="placeForward" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><polyline points="32.7 76.92 128 129.08 223.3 76.92" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M131.84,25l88,48.18a8,8,0,0,1,4.16,7v95.64a8,8,0,0,1-4.16,7l-88,48.18a8,8,0,0,1-7.68,0l-88-48.18a8,8,0,0,1-4.16-7V80.18a8,8,0,0,1,4.16-7l88-48.18A8,8,0,0,1,131.84,25Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="128" y1="129.09" x2="128" y2="232" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+        <button id="placeDown" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M32,136l96,96,96-96H176V48a8,8,0,0,0-8-8H88a8,8,0,0,0-8,8v88Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
       </div>
       <div class="move">
         <div class="moveRow">
-          <button id="moveUp">↑</button>
-          <button id="moveForward">w</button>
-          <button id="moveDown">↓</button>
+          <button id="moveUp" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><polygon points="32 120 128 24 224 120 176 120 176 152 80 152 80 120 32 120" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="176" y1="216" x2="80" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="176" y1="184" x2="80" y2="184" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+          <button id="moveForward" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><line x1="128" y1="216" x2="128" y2="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="56 112 128 40 200 112" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+          <button id="moveDown" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><polygon points="32 136 128 232 224 136 176 136 176 104 80 104 80 136 32 136" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="176" y1="40" x2="80" y2="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="176" y1="72" x2="80" y2="72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
         </div>
         <div class="moveRow">
-          <button id="turnLeft">a</button>
-          <button id="moveBack">s</button>
-          <button id="turnRight">d</button>
+          <button id="turnLeft" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><polyline points="80 152 32 104 80 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M224,200a96,96,0,0,0-96-96H32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+          <button id="moveBack" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><line x1="128" y1="40" x2="128" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="56 144 128 216 200 144" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+          <button id="turnRight" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><polyline points="176 152 224 104 176 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M32,200a96,96,0,0,1,96-96h96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
         </div>
       </div>
-      <div class="mine">
-        <button id="mineUp">↑</button>
-        <button id="mineForward">m</button>
-        <button id="mineDown">↓</button>
+      <div class="mine">                   
+        <button id="mineUp" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M32,120l96-96,96,96H176v88a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V120Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+        <button id="mineForward" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><line x1="108" y1="116" x2="140" y2="148" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="228.06" y1="99.94" x2="188" y2="140" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M40,64,53.77,49.77a88,88,0,0,1,124.46,0l67.43,67.89a8,8,0,0,1,0,11.31L217,157.66a8,8,0,0,1-11.31,0L168,120,66.34,221.66a8,8,0,0,1-11.31,0L34.34,201a8,8,0,0,1,0-11.31L136,88,79.78,31.78" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
+        <button id="mineDown" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M32,136l96,96,96-96H176V48a8,8,0,0,0-8-8H88a8,8,0,0,0-8,8v88Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
       </div>
     </div>
     <div class="tooltip" id="tooltip"></div>
     <div class="controlsBot" id="controlsBot">
       <div class="eval">
         <input type="text" id="command" placeholder="command" value="print('Hello!')">
-        <button id="sendEval">Send Command</button>
+        <button id="sendEval" class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><polyline points="80 96 120 128 80 160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="136" y1="160" x2="176" y2="160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></button>
       </div>
     </div>
     <script type="module" src="/src/renderer.ts"></script>

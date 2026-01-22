@@ -1,6 +1,6 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import { SceneManager } from '.';
+import { SceneManager } from ".";
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const turtleGeometry = new THREE.BoxGeometry(0.75, 0.75, 0.75);
@@ -26,9 +26,14 @@ export const WorldManager = {
     }
     // Remove blocks that have disappeared
     if(blockMeshes.has(`${x},${y},${z}`)) {
+      const tempMesh = blockMeshes.get(`${x},${y},${z}`);
       if(name === "minecraft:air") {
-        scene.remove(blockMeshes.get(`${x},${y},${z}`));
-        blockMeshes.delete(`${x},${y},${z}`)
+        scene.remove(tempMesh);
+        blockMeshes.delete(`${x},${y},${z}`);
+      }
+      else if(name !== tempMesh.name) {
+        scene.remove(tempMesh);
+        blockMeshes.delete(`${x},${y},${z}`);
       }
       else return;
     }
@@ -78,7 +83,7 @@ function setupWorldDataListeners() {
   // @ts-ignore
   window.electronAPI.onInitialLoad((worldData: any) => {
     for (const block in worldData) {
-      const [x, y, z] = block.split(',').map(Number);
+      const [x, y, z] = block.split(",").map(Number);
       const data = worldData[block];
       WorldManager.spawnBlock(x, y, z, data.name, data.color);
     }
@@ -86,7 +91,7 @@ function setupWorldDataListeners() {
   // @ts-ignore
   window.electronAPI.onWorldData((worldData: any) => {
     for (const block in worldData) {
-      const [x, y, z] = block.split(',').map(Number);
+      const [x, y, z] = block.split(",").map(Number);
       const data = worldData[block];
       WorldManager.spawnBlock(x, y, z, data.name, data.color);
     }

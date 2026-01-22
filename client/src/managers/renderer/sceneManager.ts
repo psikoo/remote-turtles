@@ -1,9 +1,9 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { SSAOPass } from "three/examples/jsm/postprocessing/SSAOPass.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
@@ -27,7 +27,7 @@ export const SceneManager = {
     composer = new EffectComposer(renderer);
 
     setupRenderer();
-    setupPostprocesing();
+    setupPostprocessing();
     setupRaycastTooltip();
     setupCamera();
     setupControls();
@@ -46,7 +46,7 @@ function setupRenderer() {
   });
 }
 
-function setupPostprocesing() {
+function setupPostprocessing() {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
@@ -64,17 +64,17 @@ function setupPostprocesing() {
 function setupRaycastTooltip() {
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-  const tooltip = document.getElementById('tooltip');
-  window.addEventListener('mousemove', (event) => {
+  const tooltip = document.getElementById("tooltip");
+  window.addEventListener("mousemove", (event) => {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
-      tooltip.style.display = 'unset';
+      tooltip.style.display = "unset";
       tooltip.innerHTML = intersects[0].object.name;
     } 
-    else { tooltip.style.display = 'none'; }
+    else { tooltip.style.display = "none"; }
   });
 }
 

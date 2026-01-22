@@ -17,7 +17,7 @@ export const TurtleManager = {
   },
 
   async handleHandshake(ws: any, data: any): Promise<number> {
-    const turtleId = data.response;
+    const turtleId = data.response.id;
     turtles.set(turtleId, ws);
     this.setMessageQueue(turtleId, Promise.resolve());
     console.log(`[Connected] Turtle ${turtleId}`);
@@ -28,15 +28,25 @@ export const TurtleManager = {
     electronManager.getMainWindow().webContents.send("turtle-id", turtleId);
     electronManager.getMainWindow().webContents.send("turtle-move", { x: turtle.x, y: turtle.y, z: turtle.z });
     electronManager.getMainWindow().webContents.send("turtle-turn", turtle.d);
+    electronManager.getMainWindow().webContents.send("turtle-fuel", data.response.fuel);
+    electronManager.getMainWindow().webContents.send("turtle-slot", data.response.slot);
     return turtleId;
   },
 
-  async handleTurtleMessageResponse(ws: any, turtleId: number, data: any) {
+  async handleTurtleMessageResponse(turtleId: number, data: any) {
     if(data.response == "ready") electronManager.getMainWindow().webContents.send("ui-locked", false);
     else console.log(`[Turtle ${turtleId}]:`, data); 
   },
 
-  async handleTurtleMessageMove(ws: any, turtleId: number, data: any) {
+  async handleTurtleMessageFuel(turtleId: number, data: any) {
+    electronManager.getMainWindow().webContents.send("turtle-fuel", data.response);
+  },
+
+  async handleTurtleMessageSlot(turtleId: number, data: any) {
+    electronManager.getMainWindow().webContents.send("turtle-slot", data.response);
+  },
+
+  async handleTurtleMessageMove(turtleId: number, data: any) {
     const tPos = await DatabaseManager.getTurtle(turtleId);
     if(data.response == "up")        await DatabaseManager.saveTurtle(turtleId,tPos.x, tPos.y+1, tPos.z, tPos.d);
     if(data.response == "down")      await DatabaseManager.saveTurtle(turtleId,tPos.x, tPos.y-1, tPos.z, tPos.d);
@@ -59,7 +69,7 @@ export const TurtleManager = {
     electronManager.getMainWindow().webContents.send("turtle-move", await DatabaseManager.getTurtle(turtleId));
   },
 
-  async handleTurtleMessageTurn(ws: any, turtleId: number, data: any) {
+  async handleTurtleMessageTurn(turtleId: number, data: any) {
     const tPos = await DatabaseManager.getTurtle(turtleId);
     let newDirection;
     if(data.response == "left") {
@@ -74,7 +84,7 @@ export const TurtleManager = {
     electronManager.getMainWindow().webContents.send("turtle-turn", newDirection);
   },
 
-  async handleTurtleMessageWorld(ws: any, turtleId: number, data: any) {
+  async handleTurtleMessageWorld(turtleId: number, data: any) {
     const tPos = await DatabaseManager.getTurtle(turtleId);
     if(data.response.blockU)  await DatabaseManager.saveBlock(tPos.x, tPos.y+1, tPos.z, data.response.blockU.name, data.response.blockU.color);
     if(data.response.blockD)  await DatabaseManager.saveBlock(tPos.x, tPos.y-1, tPos.z, data.response.blockD.name, data.response.blockD.color);

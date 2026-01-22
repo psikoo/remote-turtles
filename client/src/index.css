@@ -2,6 +2,70 @@ body {
   margin: 0;
 }
 
+button {
+  padding: 0.1em;
+  border-radius: 0;
+  border: 1px #000000 solid;
+  background-color: #ffffff;
+} button:hover {
+  filter: brightness(0.9);
+}
+input {
+  padding: 0.1em;
+  border-radius: 0;
+  border: 1px #000000 solid;
+  background-color: #ffffff;
+} input:hover {
+  filter: brightness(0.9);
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.inventory {
+  padding: 0.5em;
+  position: absolute;
+  left: 0px;
+  display: flex;
+  flex-direction: column;
+} 
+.inventoryRow {
+  display: flex;
+}
+.inventoryRow>button {
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.fuel {
+  padding: 0.5em;
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  transform: translate(0%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.tooltip {
+  font-size: small;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: none; 
+  padding: 0.1em;
+  border-radius: 0;
+  border: 1px #000000 solid;
+  background-color: #ffffff;
+  pointer-events: none;
+}
+
 .controlsTop {
   position: absolute;
   top: 0;
@@ -9,7 +73,6 @@ body {
   transform: translate(-50%);
   padding: 0.5em;
   display: flex;
-  gap: 0.5em;
 }
 
 .controlsBot {
@@ -19,52 +82,28 @@ body {
   transform: translate(-50%);
   padding: 0.5em;
   display: flex;
-  gap: 0.5em;
 }
 
 .move {
   display: flex;
   flex-direction: column;
-  gap: 0.25em;
 } 
 .moveRow {
   display: flex;
-  gap: 0.25em;
-} .moveRow>button {
-  width: 2em;
 }
 
 .place {
   display: flex;
   flex-direction: column;
-  gap: 0.25em;
-} .place>button {
-  width: 2.5em;
 }
 
 .mine {
   display: flex;
   flex-direction: column;
-  gap: 0.25em;
-} .mine>button {
-  width: 2.5em;
 }
 
 .eval {
   display: flex;
-  flex-direction: column;
-  gap: 0.25em;
 } .eval>input {
   text-align: center;
-}
-
-.tooltip {
-  position: absolute;
-  right: 0px;
-  display: none; 
-  background: red; 
-  color: white; 
-  padding: 5px; 
-  border-radius: 4px; 
-  pointer-events: none;
 }

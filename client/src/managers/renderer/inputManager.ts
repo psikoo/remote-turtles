@@ -1,6 +1,6 @@
-import { SceneManager, UiManager, WorldManager } from '.';
+import { SceneManager, UiManager, WorldManager } from ".";
 
-let idInput: number = 1;
+let idInput: number = 3;
 let direction: number = 0;
 let position: {x: number, y: number, z: number} = {x: 0, y: 0, z: 0};
 
@@ -8,6 +8,8 @@ export const InputManager = {
   init() {
     setupListeners();
     setupEvalListeners();
+    setupFuelListeners();
+    setupSlotListeners();
     setupMoveListeners();
     setupTurnListeners();
     setupMineListeners();
@@ -31,6 +33,14 @@ function setupListeners() {
     direction = dir;
     WorldManager.turnTurtle(dir);
   });
+  // @ts-ignore
+  window.electronAPI.onFuel((fuel: string) => {
+    document.getElementById("fuel").innerText = "Fuel: "+fuel;
+  });
+  // @ts-ignore
+  window.electronAPI.onSlot((slot: number) => {
+    document.getElementById("inv"+slot).style.backgroundColor = "#dab1da";
+  });
 }
 
 function setupEvalListeners() {
@@ -40,6 +50,31 @@ function setupEvalListeners() {
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "eval", cmdInput.value);
   });
+}
+
+function setupFuelListeners() {
+  const fuel = document.getElementById("fuel");
+  const refuel = document.getElementById("refuel");
+  fuel?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "fuel", "fuel");
+  });
+  refuel?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "fuel", "refuel");
+  });
+}
+
+function setupSlotListeners() {
+  for(let i = 1; i <= 16; i++) {
+    document.getElementById("inv"+i)?.addEventListener("click", () => {
+      for(let i = 1; i <= 16; i++) {
+        document.getElementById("inv"+i).style.backgroundColor = "white";
+      }
+      UiManager.lockUI(true); // @ts-ignore
+      window.electronAPI.onSendCommand(idInput, "slot", i);
+    });
+  }
 }
 
 function setupMoveListeners() {
@@ -117,4 +152,3 @@ function setupPlaceListeners() {
     window.electronAPI.onSendCommand(idInput, "place", "down");
   });
 }
-

@@ -27,7 +27,12 @@ while true do
     log("ERROR: "..err, colors.red)
   else
     log("CONNECTION: "..wsUrl, colors.green)
-    send(ws, "handshake", true, os.getComputerID())
+    local dataTable = {
+      id = os.getComputerID(),
+      fuel = turtle.getFuelLevel().."/"..turtle.getFuelLimit(),
+      slot = turtle.getSelectedSlot()
+    }
+    send(ws, "handshake", true, dataTable)
     while true do
       local event, url, message = os.pullEvent()
       if event == "websocket_message" then
@@ -43,8 +48,11 @@ while true do
           else
             send(ws, "response", false, "Error: "..tostring(catch))
           end
-          send(ws, "response", true, "ready")
-
+        elseif data.type == "fuel" and data.content then
+          if data.content == "refuel" then
+            turtle.refuel()
+          end
+          send(ws, "fuel", true, turtle.getFuelLevel().."/"..turtle.getFuelLimit())
         elseif data.type == "place" and data.content then
           if data.content == "forward" then
             turtle.place()
@@ -65,8 +73,6 @@ while true do
             send(ws, "place", true, "down")
             send(ws, "world", true, dataTable)
           end
-          send(ws, "response", true, "ready")
-        
         elseif data.type == "mine" and data.content then
           if data.content == "forward" then
             turtle.dig()
@@ -87,8 +93,6 @@ while true do
             send(ws, "dig", true, "down")
             send(ws, "world", true, dataTable)
           end
-          send(ws, "response", true, "ready")
-        
         elseif data.type == "move" and data.content then
           if data.content == "forward" then
             if turtle.forward() then
@@ -175,7 +179,7 @@ while true do
               send(ws, "world", true, dataTable)
             end
           end
-          send(ws, "response", true, "ready")
+          send(ws, "fuel", true, turtle.getFuelLevel().."/"..turtle.getFuelLimit())
         elseif data.type == "turn" and data.content then
           if data.content == "left" then
             turtle.turnLeft()
@@ -184,8 +188,11 @@ while true do
             turtle.turnRight()
             send(ws, "turn", true, "right")
           end
-          send(ws, "response", true, "ready")
+        elseif data.type == "slot" and data.content then
+          turtle.select(data.content)
+          send(ws, "slot", true, turtle.getSelectedSlot())
         end
+        send(ws, "response", true, "ready")
       elseif event == "websocket_closed" then
         break
       end

@@ -1,5 +1,5 @@
-import { JsonDB, Config } from 'node-json-db';
-import path from 'path';
+import { JsonDB, Config } from "node-json-db";
+import path from "path";
 
 let db: any;
 

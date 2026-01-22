@@ -15,9 +15,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.on("turtle-move", (event, position) => callback(position)),
   onTurn: (callback: any) => 
     ipcRenderer.on("turtle-turn", (event, direction) => callback(direction)),
+  onFuel: (callback: any) => 
+    ipcRenderer.on("turtle-fuel", (event, fuel) => callback(fuel)),
+  onSlot: (callback: any) => 
+    ipcRenderer.on("turtle-slot", (event, slot) => callback(slot)),
 
   onInitialLoad: (callback: any) => 
-    ipcRenderer.on('initial-world-load', (event, data) => callback(data)),
+    ipcRenderer.on("initial-world-load", (event, data) => callback(data)),
   onWorldData: (callback: any) => 
-    ipcRenderer.on('world-data', (event, data) => callback(data)),
+    ipcRenderer.on("world-data", (event, data) => callback(data)),
 });
