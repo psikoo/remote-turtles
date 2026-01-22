@@ -10,10 +10,11 @@ export const DatabaseManager = {
 
   async saveTurtle(id: number, x: number, y: number, z: number, direction: number) {
     await db.push(`/turtles/${id}`, { x, y, z, d: direction }, true);
+    this.getTurtle(id);
   },
   async getTurtle(id: number) {
     try { return await db.getData(`/turtles/${id}`); } 
-    catch { return {}; }
+    catch { return null; }
   },
 
   async saveBlock(x: number, y: number, z: number, name: string, color: number) {
@@ -21,10 +22,10 @@ export const DatabaseManager = {
   },
   async getBlock(x: number, y: number, z: number, name: string, color: number) {
     try { return await db.getData(`/world/${x},${y},${z}`); } 
-    catch { return {}; }
+    catch { return null; }
   },
   async getFullWorld() {
     try { return await db.getData("/world"); } 
-    catch { return {}; }
+    catch { return null; }
   }
 }

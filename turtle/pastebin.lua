@@ -45,6 +45,50 @@ while true do
           end
           send(ws, "response", true, "ready")
 
+        elseif data.type == "place" and data.content then
+          if data.content == "forward" then
+            turtle.place()
+            local hasBlockF, dataF = turtle.inspect()
+            local dataTable = { blockF = { name = dataF.name or "minecraft:air", color = dataF.mapColor or 0 } }
+            send(ws, "place", true, "forward")
+            send(ws, "world", true, dataTable)
+          elseif data.content == "up" then
+            turtle.placeUp()
+            local hasBlockU, dataU = turtle.inspectUp()
+            local dataTable = { blockU = { name = dataU.name or "minecraft:air", color = dataU.mapColor or 0 } }
+            send(ws, "place", true, "up")
+            send(ws, "world", true, dataTable)
+          elseif data.content == "down" then
+            turtle.placeDown()
+            local hasBlockD, dataD = turtle.inspectDown()
+            local dataTable = { blockD = { name = dataD.name or "minecraft:air", color = dataD.mapColor or 0 } }
+            send(ws, "place", true, "down")
+            send(ws, "world", true, dataTable)
+          end
+          send(ws, "response", true, "ready")
+        
+        elseif data.type == "mine" and data.content then
+          if data.content == "forward" then
+            turtle.dig()
+            local hasBlockF, dataF = turtle.inspect()
+            local dataTable = { blockF = { name = dataF.name or "minecraft:air", color = dataF.mapColor or 0 } }
+            send(ws, "dig", true, "forward")
+            send(ws, "world", true, dataTable)
+          elseif data.content == "up" then
+            turtle.digUp()
+            local hasBlockU, dataU = turtle.inspectUp()
+            local dataTable = { blockU = { name = dataU.name or "minecraft:air", color = dataU.mapColor or 0 } }
+            send(ws, "dig", true, "up")
+            send(ws, "world", true, dataTable)
+          elseif data.content == "down" then
+            turtle.digDown()
+            local hasBlockD, dataD = turtle.inspectDown()
+            local dataTable = { blockD = { name = dataD.name or "minecraft:air", color = dataD.mapColor or 0 } }
+            send(ws, "dig", true, "down")
+            send(ws, "world", true, dataTable)
+          end
+          send(ws, "response", true, "ready")
+        
         elseif data.type == "move" and data.content then
           if data.content == "forward" then
             if turtle.forward() then

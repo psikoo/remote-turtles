@@ -11,6 +11,6 @@ WorldManager.init();
 function animate() {
   requestAnimationFrame(animate);
   SceneManager.getControls().update();
-  SceneManager.getRenderer().render(SceneManager.getScene(), SceneManager.getCamera());
+  SceneManager.getComposer().render();
 }
 animate();

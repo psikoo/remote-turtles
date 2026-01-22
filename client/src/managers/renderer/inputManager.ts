@@ -1,76 +1,120 @@
-import { SceneManager, UiManager } from '.';
+import { SceneManager, UiManager, WorldManager } from '.';
 
-let idInput: number;
+let idInput: number = 1;
 let direction: number = 0;
 let position: {x: number, y: number, z: number} = {x: 0, y: 0, z: 0};
 
 export const InputManager = {
   init() {
-    idInput = parseInt((document.getElementById("turtleId") as HTMLInputElement).value);
-    setupMoveAndDirectionListeners();
+    setupListeners();
     setupEvalListeners();
     setupMoveListeners();
     setupTurnListeners();
+    setupMineListeners();
+    setupPlaceListeners();
   },
 }
 
-function setupMoveAndDirectionListeners() {
+function setupListeners() {
+  // @ts-ignore
+  window.electronAPI.onId((id: number) => {
+    idInput = id
+  });
   // @ts-ignore
   window.electronAPI.onMove((pos: Vector3) => {
     position = pos;
+    WorldManager.moveTurtle(pos.x, pos.y, pos.z);
     SceneManager.getControls().target.set(position.x, position.y, position.z);
   });
   // @ts-ignore
   window.electronAPI.onTurn((dir: number) => {
     direction = dir;
+    WorldManager.turnTurtle(dir);
   });
 }
 
 function setupEvalListeners() {
   const cmdInput = document.getElementById("command");
-  const sendBtn = document.getElementById("sendBtn");
-  sendBtn?.addEventListener("click", () => {
+  const sendEval = document.getElementById("sendEval");
+  sendEval?.addEventListener("click", () => {
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "eval", cmdInput.value);
   });
 }
 
 function setupMoveListeners() {
-  const sendForward = document.getElementById("sendForward");
-  const sendBack = document.getElementById("sendBack");
-  const sendUp = document.getElementById("sendUp");
-  const sendDown = document.getElementById("sendDown");
-  sendForward?.addEventListener("click", () => { 
+  const moveForward = document.getElementById("moveForward");
+  const moveBack = document.getElementById("moveBack");
+  const moveUp = document.getElementById("moveUp");
+  const moveDown = document.getElementById("moveDown");
+  moveForward?.addEventListener("click", () => { 
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "move", "forward");
   });
-  sendBack?.addEventListener("click", () => {
+  moveBack?.addEventListener("click", () => {
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "move", "back");
   });
-  sendUp?.addEventListener("click", () => { 
+  moveUp?.addEventListener("click", () => { 
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "move", "up");
   });
-  sendDown?.addEventListener("click", () => {
+  moveDown?.addEventListener("click", () => {
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "move", "down");
   });
 }
 
 function setupTurnListeners() {
-  const sendLeft = document.getElementById("sendLeft");
-  const sendRight = document.getElementById("sendRight");
-  sendLeft?.addEventListener("click", () => {
+  const turnLeft = document.getElementById("turnLeft");
+  const turnRight = document.getElementById("turnRight");
+  turnLeft?.addEventListener("click", () => {
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "turn", "left");
     direction = direction-1;
     if(direction == -1) direction = 3;
   });
-  sendRight?.addEventListener("click", () => {
+  turnRight?.addEventListener("click", () => {
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "turn", "right");
     direction = direction+1;
     if(direction == 4) direction = 0;
   });
 }
+
+function setupMineListeners() {
+  const mineUp = document.getElementById("mineUp");
+  const mineForward = document.getElementById("mineForward");
+  const mineDown = document.getElementById("mineDown");
+  mineUp?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "mine", "up");
+  });
+  mineForward?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "mine", "forward");
+  });
+  mineDown?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "mine", "down");
+  });
+}
+
+function setupPlaceListeners() {
+  const placeUp = document.getElementById("placeUp");
+  const placeForward = document.getElementById("placeForward");
+  const placeDown = document.getElementById("placeDown");
+  placeUp?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "place", "up");
+  });
+  placeForward?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "place", "forward");
+  });
+  placeDown?.addEventListener("click", () => {
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "place", "down");
+  });
+}
+

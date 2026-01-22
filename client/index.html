@@ -7,25 +7,36 @@
     <link rel="stylesheet" href="./src/index.css">
   </head>
   <body>
-    <div class="controls" id="controls">
-      <input type="number" id="turtleId" placeholder="id" value="3">
-      <input type="text" id="command" placeholder="command" value="print('womp')">
-      <button id="sendBtn">Send Command</button>
-      <div class="movement">
-        <div class="row">
-          <button id="sendUp">↑</button>
-          <button id="sendForward">w</button>
-          <button id="sendDown">↓</button>
+    <div class="controlsTop" id="controlsTop">
+      <div class="place">
+        <button id="placeUp">↑</button>
+        <button id="placeForward">p</button>
+        <button id="placeDown">↓</button>
+      </div>
+      <div class="move">
+        <div class="moveRow">
+          <button id="moveUp">↑</button>
+          <button id="moveForward">w</button>
+          <button id="moveDown">↓</button>
         </div>
-        <div class="row">
-          <button id="sendLeft">a</button>
-          <button id="sendBack">s</button>
-          <button id="sendRight">d</button>
+        <div class="moveRow">
+          <button id="turnLeft">a</button>
+          <button id="moveBack">s</button>
+          <button id="turnRight">d</button>
         </div>
       </div>
+      <div class="mine">
+        <button id="mineUp">↑</button>
+        <button id="mineForward">m</button>
+        <button id="mineDown">↓</button>
+      </div>
     </div>
-    <div class="tooltip" id="tooltip">
-      Tooltip Text
+    <div class="tooltip" id="tooltip"></div>
+    <div class="controlsBot" id="controlsBot">
+      <div class="eval">
+        <input type="text" id="command" placeholder="command" value="print('Hello!')">
+        <button id="sendEval">Send Command</button>
+      </div>
     </div>
     <script type="module" src="/src/renderer.ts"></script>
   </body>

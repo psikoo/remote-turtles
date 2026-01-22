@@ -1,15 +1,21 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
+let composer: any;
 let controls: any;
 
 export const SceneManager = {
   getScene: () => scene,
   getCamera: () => camera,
   getRenderer: () => renderer,
+  getComposer: () => composer,
   getControls: () => controls,
 
   init() {
@@ -18,11 +24,14 @@ export const SceneManager = {
       
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    composer = new EffectComposer(renderer);
 
     setupRenderer();
+    setupPostprocesing();
     setupRaycastTooltip();
-    setupControls();
     setupCamera();
+    setupControls();
+    setupLighting();
   },
 }
 
@@ -33,7 +42,23 @@ function setupRenderer() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
   });
+}
+
+function setupPostprocesing() {
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+
+  const ssaoPass = new SSAOPass(scene, camera, window.innerWidth, window.innerHeight);
+  ssaoPass.kernelRadius = 10; 
+  ssaoPass.minDistance = 0.001;
+  ssaoPass.maxDistance = 0.05;
+  // ssaoPass.output = SSAOPass.OUTPUT.SSAO;
+  composer.addPass(ssaoPass);
+
+  const outputPass = new OutputPass();
+  composer.addPass(outputPass);
 }
 
 function setupRaycastTooltip() {
@@ -53,6 +78,12 @@ function setupRaycastTooltip() {
   });
 }
 
+function setupCamera() {
+  camera.position.y = 5;
+  camera.position.x = 5;
+  camera.position.z = -5;
+}
+
 function setupControls() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.mouseButtons = {
@@ -64,7 +95,9 @@ function setupControls() {
   controls.target.set(0, 0, 0);
 }
 
-function setupCamera() {
-  camera.position.y = 5;
-  camera.position.z = 5;
+function setupLighting() {
+  scene.add(new THREE.AmbientLight(0xffffff, 1));
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+  directionalLight.position.set(5, 5, -5);
+  scene.add(directionalLight);
 }

@@ -14,7 +14,8 @@ export const electronManager = {
     app.whenReady().then(() => {
       createWindow();
       mainWindow.webContents.on('did-finish-load', async () => { 
-        mainWindow.webContents.send("initial-world-load", await DatabaseManager.getFullWorld());
+        const worldData = await DatabaseManager.getFullWorld();
+        if(worldData) mainWindow.webContents.send("initial-world-load", worldData);
       });
       if(openDevTools) mainWindow.webContents.openDevTools();
     });
