@@ -32,12 +32,30 @@ local function doEval(data)
   end
 end
 
-local function doFuel()
-  
+local function calculateFuel()
+  return turtle.getFuelLevel().."/"..turtle.getFuelLimit()
 end
 
-local function doPlace()
-  
+local function calculateInventory()
+  local inventory = {
+    s1 = { item = turtle.getItemDetail(1).name, count = turtle.getItemDetail(1).count },
+    s2 = { item = turtle.getItemDetail(2).name, count = turtle.getItemDetail(2).count },
+    s3 = { item = turtle.getItemDetail(3).name, count = turtle.getItemDetail(3).count },
+    s4 = { item = turtle.getItemDetail(4).name, count = turtle.getItemDetail(4).count },
+    s5 = { item = turtle.getItemDetail(5).name, count = turtle.getItemDetail(5).count },
+    s6 = { item = turtle.getItemDetail(6).name, count = turtle.getItemDetail(6).count },
+    s7 = { item = turtle.getItemDetail(7).name, count = turtle.getItemDetail(7).count },
+    s8 = { item = turtle.getItemDetail(8).name, count = turtle.getItemDetail(8).count },
+    s9 = { item = turtle.getItemDetail(9).name, count = turtle.getItemDetail(9).count },
+    s10 = { item = turtle.getItemDetail(10).name, count = turtle.getItemDetail(10).count },
+    s11 = { item = turtle.getItemDetail(11).name, count = turtle.getItemDetail(11).count },
+    s12 = { item = turtle.getItemDetail(12).name, count = turtle.getItemDetail(12).count },
+    s13 = { item = turtle.getItemDetail(13).name, count = turtle.getItemDetail(13).count },
+    s14 = { item = turtle.getItemDetail(14).name, count = turtle.getItemDetail(14).count },
+    s15 = { item = turtle.getItemDetail(15).name, count = turtle.getItemDetail(15).count },
+    s16 = { item = turtle.getItemDetail(16).name, count = turtle.getItemDetail(16).count }
+  }
+  return inventory
 end
 
 local function doMine()
@@ -68,26 +86,9 @@ while true do
     log("CONNECTION: "..wsUrl, colors.green)
     local dataTable = {
       id = os.getComputerID(),
-      fuel = turtle.getFuelLevel().."/"..turtle.getFuelLimit(),
+      fuel = calculateFuel(),
       slot = turtle.getSelectedSlot(),
-      inventory = {
-        s1 = { item = turtle.getItemDetail(1).name, count = turtle.getItemDetail(1).count },
-        s2 = { item = turtle.getItemDetail(2).name, count = turtle.getItemDetail(2).count },
-        s3 = { item = turtle.getItemDetail(3).name, count = turtle.getItemDetail(3).count },
-        s4 = { item = turtle.getItemDetail(4).name, count = turtle.getItemDetail(4).count },
-        s5 = { item = turtle.getItemDetail(5).name, count = turtle.getItemDetail(5).count },
-        s6 = { item = turtle.getItemDetail(6).name, count = turtle.getItemDetail(6).count },
-        s7 = { item = turtle.getItemDetail(7).name, count = turtle.getItemDetail(7).count },
-        s8 = { item = turtle.getItemDetail(8).name, count = turtle.getItemDetail(8).count },
-        s9 = { item = turtle.getItemDetail(9).name, count = turtle.getItemDetail(9).count },
-        s10 = { item = turtle.getItemDetail(10).name, count = turtle.getItemDetail(10).count },
-        s11 = { item = turtle.getItemDetail(11).name, count = turtle.getItemDetail(11).count },
-        s12 = { item = turtle.getItemDetail(12).name, count = turtle.getItemDetail(12).count },
-        s13 = { item = turtle.getItemDetail(13).name, count = turtle.getItemDetail(13).count },
-        s14 = { item = turtle.getItemDetail(14).name, count = turtle.getItemDetail(14).count },
-        s15 = { item = turtle.getItemDetail(15).name, count = turtle.getItemDetail(15).count },
-        s16 = { item = turtle.getItemDetail(16).name, count = turtle.getItemDetail(16).count }
-      }
+      inventory = calculateInventory(),
     }
     send(ws, "handshake", true, dataTable)
     while true do
@@ -97,12 +98,12 @@ while true do
         log("WS: ("..data.type..") "..data.content, colors.purple)
 
         if data.type == "eval" and data.content then
-          doEval()
+          doEval(data)
         elseif data.type == "fuel" and data.content then
           if data.content == "refuel" then
             turtle.refuel()
           end
-          send(ws, "fuel", true, turtle.getFuelLevel().."/"..turtle.getFuelLimit())
+          send(ws, "fuel", true, calculateFuel())
         elseif data.type == "place" and data.content then
           if data.content == "forward" then
             turtle.place()
