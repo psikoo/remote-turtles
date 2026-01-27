@@ -13,6 +13,14 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
+    {
+      name: '@rabbitholesyndrome/electron-forge-maker-portable',
+      config: {
+        portable: {
+          artifactName: "RemoteTurtles.exe"
+        }
+      }
+    },
     new MakerSquirrel({}),
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
