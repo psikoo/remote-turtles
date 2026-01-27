@@ -16,6 +16,18 @@ export const TurtleManager = {
     setupCommandListener();
   },
 
+  removeTurtle(turtleId: number) {
+    console.log(`[Disconnected] Turtle ${turtleId}`);
+    turtles.delete(turtleId);
+  },
+
+  disconectAll() {
+    turtles.forEach((turtle) => {
+      turtle.close(1001, "Renderer reloading");
+    });
+    turtles.clear();
+  },
+
   async handleHandshake(ws: any, data: any): Promise<number> {
     const turtleId = data.response.id;
     turtles.set(turtleId, ws);
@@ -30,6 +42,7 @@ export const TurtleManager = {
     electronManager.getMainWindow().webContents.send("turtle-turn", turtle.d);
     electronManager.getMainWindow().webContents.send("turtle-fuel", data.response.fuel);
     electronManager.getMainWindow().webContents.send("turtle-slot", data.response.slot);
+    electronManager.getMainWindow().webContents.send("turtle-inventory", data.response.inventory);
     return turtleId;
   },
 
@@ -116,6 +129,10 @@ export const TurtleManager = {
     if(worldData) electronManager.getMainWindow().webContents.send("initial-world-load", worldData);
     // TODO change to only send relevant blocks
   },
+
+  async handleTurtleMessageInventory(turtleId: number, data: any) {
+    electronManager.getMainWindow().webContents.send("turtle-inventory", data.response);
+  }
 }
 
 function setupCommandListener() {

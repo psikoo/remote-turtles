@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu } from "electron";
 import started from "electron-squirrel-startup";
 import path from "node:path";
-import { DatabaseManager } from "./databaseManager";
+import { DatabaseManager, TurtleManager } from ".";
 
 let mainWindow: any
 
@@ -16,6 +16,7 @@ export const electronManager = {
       mainWindow.webContents.on("did-finish-load", async () => { 
         const worldData = await DatabaseManager.getFullWorld();
         if(worldData) mainWindow.webContents.send("initial-world-load", worldData);
+        TurtleManager.disconectAll();
       });
       if(openDevTools) mainWindow.webContents.openDevTools();
     });

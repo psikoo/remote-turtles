@@ -19,12 +19,21 @@ input {
   filter: brightness(0.9);
 }
 
+.grow {
+  flex-grow: 1;
+}
+
 .icon {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 2.5em;
   height: 2.5em;
+} .smallicon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.75em;
 }
 
 .inventory {
@@ -42,15 +51,8 @@ input {
   height: 2.5em;
 }
 
-.fuel {
-  padding: 0.5em;
-  position: absolute;
-  left: 0px;
-  top: 50%;
-  transform: translate(0%, -50%);
+.dropsuck {
   display: flex;
-  flex-direction: column;
-  gap: 0.25em;
 }
 
 .tooltip {

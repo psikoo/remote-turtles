@@ -1,6 +1,6 @@
 import { SceneManager, UiManager, WorldManager } from ".";
 
-let idInput: number = 3;
+let idInput: number = 0;
 let direction: number = 0;
 let position: {x: number, y: number, z: number} = {x: 0, y: 0, z: 0};
 
@@ -10,6 +10,7 @@ export const InputManager = {
     setupEvalListeners();
     setupFuelListeners();
     setupSlotListeners();
+    setupInventoryListeners();
     setupMoveListeners();
     setupTurnListeners();
     setupMineListeners();
@@ -39,7 +40,21 @@ function setupListeners() {
   });
   // @ts-ignore
   window.electronAPI.onSlot((slot: number) => {
-    document.getElementById("inv"+slot).style.backgroundColor = "#dab1da";
+    document.getElementById("s"+slot).style.backgroundColor = "#dab1da";
+  });
+  // @ts-ignore
+  window.electronAPI.onInventory((inventory: {[key:string]:{name:string; count:number; nbt?:string; }}) => {
+    const inventoryArray: any[] = Object.entries(inventory).map(([key, value]) => ({ slot: key, ...value }));
+    for(let i = 1; i <= 16; i++) {
+      const button = document.getElementById("s"+i); 
+      button.textContent = "";
+      button.title = "";    
+    }
+    for(let i = 0; i < inventoryArray.length; i++) {
+      const button = document.getElementById(inventoryArray[i].slot); 
+      button.textContent = inventoryArray[i].count;
+      button.title = inventoryArray[i].name;
+    }
   });
 }
 
@@ -67,14 +82,67 @@ function setupFuelListeners() {
 
 function setupSlotListeners() {
   for(let i = 1; i <= 16; i++) {
-    document.getElementById("inv"+i)?.addEventListener("click", () => {
+    document.getElementById("s"+i)?.addEventListener("click", () => {
       for(let i = 1; i <= 16; i++) {
-        document.getElementById("inv"+i).style.backgroundColor = "white";
+        document.getElementById("s"+i).style.backgroundColor = "white";
       }
       UiManager.lockUI(true); // @ts-ignore
       window.electronAPI.onSendCommand(idInput, "slot", i);
     });
   }
+}
+
+function setupInventoryListeners() {
+  const drop = document.getElementById("drop");
+  const drop1 = document.getElementById("drop1");
+  const drop8 = document.getElementById("drop8");
+  const drop16 = document.getElementById("drop16");
+  const drop32 = document.getElementById("drop32");
+  const suck = document.getElementById("suck");
+  const suck1 = document.getElementById("suck1");
+  const suck8 = document.getElementById("suck8");
+  const suck16 = document.getElementById("suck16");
+  const suck32 = document.getElementById("suck32");
+  drop?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "drop");
+  });
+  drop1?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "drop1");
+  });
+  drop8?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "drop8");
+  });
+  drop16?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "drop16");
+  });
+  drop32?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "drop32");
+  });
+  suck?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "suck");
+  });
+  suck1?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "suck1");
+  });
+  suck8?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "suck8");
+  });
+  suck16?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "suck16");
+  });
+  suck32?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "suck32");
+  });
 }
 
 function setupMoveListeners() {
