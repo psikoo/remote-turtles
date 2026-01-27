@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  user-select: none;
 }
 
 button {
@@ -17,6 +18,8 @@ input {
   background-color: #ffffff;
 } input:hover {
   filter: brightness(0.9);
+} input, textarea, [contenteditable="true"] {
+  user-select: text;
 }
 
 .grow {
@@ -51,7 +54,7 @@ input {
   height: 2.5em;
 }
 
-.dropsuck {
+.dropsuckcraft {
   display: flex;
 }
 
@@ -61,7 +64,8 @@ input {
   left: 0;
   bottom: 0;
   display: none; 
-  padding: 0.1em;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  margin: 0.5em;
   border-radius: 0;
   border: 1px #000000 solid;
   background-color: #ffffff;

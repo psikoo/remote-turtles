@@ -80,6 +80,7 @@ while true do
             turtle.refuel()
           end
           send(ws, "fuel", true, calculateFuel())
+          send(ws, "inventory", true, calculateInventory())
         elseif data.type == "place" and data.content then
           if data.content == "forward" then
             turtle.place()
@@ -227,12 +228,17 @@ while true do
             turtle.drop()
           elseif data.content == "suck" then
             turtle.suck()
+          elseif data.content == "craft" then
+            turtle.craft()
           elseif string.find(data.content, "drop") then
             local quantity, tmpBool = string.gsub(data.content, "drop", "")
             turtle.drop(tonumber(quantity))
           elseif string.find(data.content, "suck") then
             local quantity, tmpBool = string.gsub(data.content, "suck", "")
             turtle.suck(tonumber(quantity))
+          elseif string.find(data.content, "craft") then
+            local quantity, tmpBool = string.gsub(data.content, "craft", "")
+            turtle.craft(tonumber(quantity))
           end
           send(ws, "inventory", true, calculateInventory())
         end

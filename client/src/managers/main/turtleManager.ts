@@ -21,7 +21,7 @@ export const TurtleManager = {
     turtles.delete(turtleId);
   },
 
-  disconectAll() {
+  disconnectAll() {
     turtles.forEach((turtle) => {
       turtle.close(1001, "Renderer reloading");
     });
@@ -98,36 +98,88 @@ export const TurtleManager = {
   },
 
   async handleTurtleMessageWorld(turtleId: number, data: any) {
+    const mainWindow = electronManager.getMainWindow();
     const tPos = await DatabaseManager.getTurtle(turtleId);
-    if(data.response.blockU)  await DatabaseManager.saveBlock(tPos.x, tPos.y+1, tPos.z, data.response.blockU.name, data.response.blockU.color);
-    if(data.response.blockD)  await DatabaseManager.saveBlock(tPos.x, tPos.y-1, tPos.z, data.response.blockD.name, data.response.blockD.color);
+    if(data.response.blockU) {
+      await DatabaseManager.saveBlock(tPos.x, tPos.y+1, tPos.z, data.response.blockU.name, data.response.blockU.color);
+      mainWindow.webContents.send("world-data", tPos.x, tPos.y+1, tPos.z, await DatabaseManager.getBlock(tPos.x, tPos.y+1, tPos.z));
+    } 
+    if(data.response.blockD) {
+      await DatabaseManager.saveBlock(tPos.x, tPos.y-1, tPos.z, data.response.blockD.name, data.response.blockD.color);
+      mainWindow.webContents.send("world-data", tPos.x, tPos.y-1, tPos.z, await DatabaseManager.getBlock(tPos.x, tPos.y-1, tPos.z));
+    } 
     if(tPos.d == 0) {
-      if(data.response.blockF) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockF.name, data.response.blockF.color);
-      if(data.response.blockB) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockB.name, data.response.blockB.color);
-      if(data.response.blockL) await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockL.name, data.response.blockL.color);
-      if(data.response.blockR) await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockR.name, data.response.blockR.color);
+      if(data.response.blockF) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockF.name, data.response.blockF.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z+1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z+1));
+      } 
+      if(data.response.blockB) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockB.name, data.response.blockB.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z-1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z-1));
+      } 
+      if(data.response.blockL) {
+        await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockL.name, data.response.blockL.color);
+        mainWindow.webContents.send("world-data", tPos.x+1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x+1, tPos.y, tPos.z));
+      } 
+      if(data.response.blockR) {
+        await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockR.name, data.response.blockR.color);
+        mainWindow.webContents.send("world-data", tPos.x-1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x-1, tPos.y, tPos.z));
+      } 
     }
-    if(tPos.d == 1) {
-      if(data.response.blockF) await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockF.name, data.response.blockF.color);
-      if(data.response.blockB) await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockB.name, data.response.blockB.color);
-      if(data.response.blockL) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockL.name, data.response.blockL.color);
-      if(data.response.blockR) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockR.name, data.response.blockR.color);
+    else if(tPos.d == 1) {
+      if(data.response.blockF) {
+        await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockF.name, data.response.blockF.color);
+        mainWindow.webContents.send("world-data", tPos.x-1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x-1, tPos.y, tPos.z));
+      } 
+      if(data.response.blockB) {
+        await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockB.name, data.response.blockB.color);
+        mainWindow.webContents.send("world-data", tPos.x+1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x+1, tPos.y, tPos.z));
+      } 
+      if(data.response.blockL) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockL.name, data.response.blockL.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z+1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z+1));
+      } 
+      if(data.response.blockR) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockR.name, data.response.blockR.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z-1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z-1));
+      } 
     }
-    if(tPos.d == 2) {
-      if(data.response.blockF) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockF.name, data.response.blockF.color);
-      if(data.response.blockB) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockB.name, data.response.blockB.color);
-      if(data.response.blockL) await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockL.name, data.response.blockL.color);
-      if(data.response.blockR) await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockR.name, data.response.blockR.color);
+    else if(tPos.d == 2) {
+      if(data.response.blockF) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockF.name, data.response.blockF.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z-1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z-1));
+      } 
+      if(data.response.blockB) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockB.name, data.response.blockB.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z+1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z+1));
+      } 
+      if(data.response.blockL) {
+        await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockL.name, data.response.blockL.color);
+        mainWindow.webContents.send("world-data", tPos.x-1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x-1, tPos.y, tPos.z));
+      } 
+      if(data.response.blockR) {
+        await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockR.name, data.response.blockR.color);
+        mainWindow.webContents.send("world-data", tPos.x+1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x+1, tPos.y, tPos.z));
+      } 
     }
-    if(tPos.d == 3) {
-      if(data.response.blockF) await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockF.name, data.response.blockF.color);
-      if(data.response.blockB) await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockB.name, data.response.blockB.color);
-      if(data.response.blockL) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockL.name, data.response.blockL.color);
-      if(data.response.blockR) await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockR.name, data.response.blockR.color);
+    else if(tPos.d == 3) {
+      if(data.response.blockF) {
+        await DatabaseManager.saveBlock(tPos.x+1, tPos.y, tPos.z, data.response.blockF.name, data.response.blockF.color);
+        mainWindow.webContents.send("world-data", tPos.x+1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x+1, tPos.y, tPos.z));
+      } 
+      if(data.response.blockB) {
+        await DatabaseManager.saveBlock(tPos.x-1, tPos.y, tPos.z, data.response.blockB.name, data.response.blockB.color);
+        mainWindow.webContents.send("world-data", tPos.x-1, tPos.y, tPos.z, await DatabaseManager.getBlock(tPos.x-1, tPos.y, tPos.z));
+      } 
+      if(data.response.blockL) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z-1, data.response.blockL.name, data.response.blockL.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z-1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z-1));
+      } 
+      if(data.response.blockR) {
+        await DatabaseManager.saveBlock(tPos.x, tPos.y, tPos.z+1, data.response.blockR.name, data.response.blockR.color);
+        mainWindow.webContents.send("world-data", tPos.x, tPos.y, tPos.z+1, await DatabaseManager.getBlock(tPos.x, tPos.y, tPos.z+1));
+      } 
     }
-    const worldData = await DatabaseManager.getFullWorld();
-    if(worldData) electronManager.getMainWindow().webContents.send("initial-world-load", worldData);
-    // TODO change to only send relevant blocks
   },
 
   async handleTurtleMessageInventory(turtleId: number, data: any) {

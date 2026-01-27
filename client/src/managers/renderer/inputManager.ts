@@ -103,6 +103,11 @@ function setupInventoryListeners() {
   const suck8 = document.getElementById("suck8");
   const suck16 = document.getElementById("suck16");
   const suck32 = document.getElementById("suck32");
+  const craft = document.getElementById("craft");
+  const craft1 = document.getElementById("craft1");
+  const craft8 = document.getElementById("craft8");
+  const craft16 = document.getElementById("craft16");
+  const craft32 = document.getElementById("craft32");
   drop?.addEventListener("click", () => { 
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "item", "drop");
@@ -142,6 +147,26 @@ function setupInventoryListeners() {
   suck32?.addEventListener("click", () => { 
     UiManager.lockUI(true); // @ts-ignore
     window.electronAPI.onSendCommand(idInput, "item", "suck32");
+  });
+  craft?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "craft");
+  });
+  craft1?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "craft1");
+  });
+  craft8?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "craft8");
+  });
+  craft16?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "craft16");
+  });
+  craft32?.addEventListener("click", () => { 
+    UiManager.lockUI(true); // @ts-ignore
+    window.electronAPI.onSendCommand(idInput, "item", "craft32");
   });
 }
 

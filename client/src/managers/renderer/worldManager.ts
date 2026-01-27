@@ -64,14 +64,22 @@ export const WorldManager = {
 }
 
 function createTurtle() {
-  const materials = [
-    new THREE.MeshStandardMaterial({ color: 0xff0000 }), // R
-    new THREE.MeshStandardMaterial({ color: 0xff0000 }), // L
-    new THREE.MeshStandardMaterial({ color: 0xff0000 }), // T
-    new THREE.MeshStandardMaterial({ color: 0xff0000 }), // B
-    new THREE.MeshStandardMaterial({ color: 0x0000FF }), // F
-    new THREE.MeshStandardMaterial({ color: 0xff0000 })  // B
+  const loader = new THREE.TextureLoader();
+  const paths = [
+    "/assets/turtle/right.png", 
+    "/assets/turtle/left.png", 
+    "/assets/turtle/top.png", 
+    "/assets/turtle/bottom.png", 
+    "/assets/turtle/front.png", 
+    "/assets/turtle/back.png"
   ];
+  const materials = paths.map(path => {
+    const texture = loader.load(path);
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter
+    texture.colorSpace = THREE.SRGBColorSpace; 
+    return new THREE.MeshStandardMaterial({ map: texture });
+  });
   const material = new THREE.MeshLambertMaterial({ color: 0xFF0000 });
   turtle = new THREE.Mesh(turtleGeometry, materials);
   turtle.position.set(0, 0, 0);
@@ -89,11 +97,7 @@ function setupWorldDataListeners() {
     }
   });
   // @ts-ignore
-  window.electronAPI.onWorldData((worldData: any) => {
-    for (const block in worldData) {
-      const [x, y, z] = block.split(",").map(Number);
-      const data = worldData[block];
-      WorldManager.spawnBlock(x, y, z, data.name, data.color);
-    }
+  window.electronAPI.onWorldData((x: number, y: number, z: number, block: any) => {
+    WorldManager.spawnBlock(x, y, z, block.name, block.color);
   });
 }

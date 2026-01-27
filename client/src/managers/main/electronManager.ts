@@ -16,7 +16,7 @@ export const electronManager = {
       mainWindow.webContents.on("did-finish-load", async () => { 
         const worldData = await DatabaseManager.getFullWorld();
         if(worldData) mainWindow.webContents.send("initial-world-load", worldData);
-        TurtleManager.disconectAll();
+        TurtleManager.disconnectAll();
       });
       if(openDevTools) mainWindow.webContents.openDevTools();
     });
@@ -30,6 +30,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000, height: 700,
     webPreferences: { preload: path.join(__dirname, "preload.js") },
+    icon: "./assets/icon/icon.png"
   });
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);

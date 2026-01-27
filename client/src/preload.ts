@@ -25,5 +25,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
   onInitialLoad: (callback: any) => 
     ipcRenderer.on("initial-world-load", (event, data) => callback(data)),
   onWorldData: (callback: any) => 
-    ipcRenderer.on("world-data", (event, data) => callback(data)),
+    ipcRenderer.on("world-data", (event, x, y, z, block) => callback(x, y, z, block)),
 });

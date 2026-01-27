@@ -20,7 +20,7 @@ export const DatabaseManager = {
   async saveBlock(x: number, y: number, z: number, name: string, color: number) {
     await db.push(`/world/${x},${y},${z}`, { name, color }, true);
   },
-  async getBlock(x: number, y: number, z: number, name: string, color: number) {
+  async getBlock(x: number, y: number, z: number) {
     try { return await db.getData(`/world/${x},${y},${z}`); } 
     catch { return null; }
   },
