@@ -9,7 +9,7 @@ let turtle: any;
 
 const ignoredNames = [
   "minecraft:air", 
-  "minecraft:grass", , "minecraft:fern"
+  "minecraft:grass", "minecraft:fern", "minecraft:vine"
 ];
 
 export const WorldManager = {
